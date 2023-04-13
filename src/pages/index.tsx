@@ -2,6 +2,7 @@ import styles from "@/styles/Home.module.css";
 import { Pokemon } from "@/domain/Pokemon";
 import Image from "next/image";
 import Card from "@/components/Card";
+import axios from 'axios';
 
 interface HomeProps {
   pokemons: Pokemon[];
@@ -11,8 +12,10 @@ export async function getStaticProps() {
   const maxPokemons = 150;
   const api = "https://pokeapi.co/api/v2/pokemon/";
 
-  const res = await fetch(`${api}/?limit=${maxPokemons}`);
-  const data = await res.json();
+  const data = await axios.get(`${api}/?limit=${maxPokemons}`)
+    .then(function (response) {
+      return response.data
+    })
 
   data.results.map((item: any, index: number) => {
     item.id = index + 1;

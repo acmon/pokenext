@@ -1,11 +1,15 @@
 import Image from "next/image";
+import axios from "axios";
 
 import styles from "@/styles/Pokemon.module.css"
 
 export const getStaticProps = async(context: any) => {
   const id = context.params.pokemonId
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-  const data = await res.json()
+
+  const data = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    .then(function (response) {
+      return response.data
+    })
 
   return {
     props: { pokemon: data }
@@ -16,8 +20,10 @@ export const getStaticPaths = async() => {
   const maxPokemons = 150;
   const api = "https://pokeapi.co/api/v2/pokemon/";
 
-  const res = await fetch(`${api}/?limit=${maxPokemons}`);
-  const data = await res.json();
+  const data = await axios.get(`${api}/?limit=${maxPokemons}`)
+    .then(function (response) {
+      return response.data
+    })
 
   const paths = data.results.map((pokemon: any, index: number) => {
     return {
